@@ -413,10 +413,7 @@ class OrderService {
     try {
       // If user is customer, only show their orders
       if (this.context.user.role === "CUSTOMER") {
-        params.where = {
-          ...params.where,
-          created_by: this.context.user.id,
-        };
+        params.created_by_eq = this.context.user.id;
       }
 
       const orders = await this.orderModel.findAll({
