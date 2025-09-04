@@ -166,22 +166,45 @@ class CollectionService {
         trx,
       });
 
-      console.log("user", user);
+      let resultData;
 
-      const CustomerCollectionAccess =
-        await this.collectionAccessService.getCustomerCollections({
-          customerId: user.id,
+      // Only apply collection access filtering for CUSTOMER role
+      if (user.role === "CUSTOMER") {
+        const CustomerCollectionAccess =
+          await this.collectionAccessService.getCustomerCollections({
+            customerId: user.id,
+            status: "ACTIVE", // Only get active access
+            trx,
+          });
+
+        // Extract collection IDs from active access records
+        const accessibleCollectionIds = CustomerCollectionAccess.data
+          .filter((item) => item.status === "ACTIVE")
+          .map((item) => item.collection_id);
+
+        // If user has no access to any collections, return empty array
+        if (accessibleCollectionIds.length === 0) {
+          if (isNewTrx) await trx.commit();
+          return [];
+        }
+
+        // Add collection_id filter to params for customers
+        const filteredParams = {
+          ...params,
+          id_in: accessibleCollectionIds, // Use id_in to filter collections by accessible IDs
+        };
+
+        resultData = await this.collectionModel.findAll({
+          params: filteredParams,
           trx,
         });
-
-      console.log("CustomerCollectionAccess", CustomerCollectionAccess);
-
-      const resultData = await this.collectionModel.findAll({
-        params,
-        trx,
-      });
-
-      console.log("resultData", resultData);
+      } else {
+        // For non-customer roles (ADMIN, etc.), return all collections without filtering
+        resultData = await this.collectionModel.findAll({
+          params,
+          trx,
+        });
+      }
 
       for (const collection of resultData.data) {
         const serialNumbers =
@@ -318,6 +341,11 @@ class CollectionService {
       if (!existingCollection) {
         throw new Error("Collection not found");
       }
+
+      await this.collectionAccessService.deleteCustomerCollectionAccess({
+        collectionId,
+        trx,
+      });
 
       await this.collectionSrNoService.deleteSerialNumbersByCollection({
         collectionId,

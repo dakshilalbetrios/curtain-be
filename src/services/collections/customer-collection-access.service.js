@@ -249,6 +249,41 @@ class CustomerCollectionAccessService {
       throw error;
     }
   }
+
+  async deleteCustomerCollectionAccess({ collectionId, trx: providedTrx }) {
+    let trx = providedTrx;
+    let isNewTrx = false;
+    try {
+      if (!trx) {
+        trx = await knex.transaction();
+        isNewTrx = true;
+      }
+
+      const existingAccess = await this.customerCollectionAccessModel.findAll({
+        params: { collection_id_eq: collectionId },
+        trx,
+      });
+
+      if (existingAccess.length === 0) {
+        throw new Error("Customer collection access not found");
+      }
+
+      console.log("existingAccess", existingAccess);
+
+      for (const access of existingAccess.data) {
+        await this.customerCollectionAccessModel.delete({
+          id: access.id,
+          trx,
+        });
+      }
+
+      if (isNewTrx) await trx.commit();
+      return { message: "Customer collection access deleted successfully" };
+    } catch (error) {
+      if (isNewTrx && trx) await trx.rollback();
+      throw error;
+    }
+  }
 }
 
 module.exports = CustomerCollectionAccessService;
