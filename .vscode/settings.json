@@ -1,0 +1,87 @@
+{
+  "editor.stickyScroll.enabled": true, // Keeps function/class headers sticky
+  "editor.minimap.enabled": false, // Disables minimap for cleaner UI
+  "editor.cursorSmoothCaretAnimation": "on", // Smoother typing experience
+  "editor.cursorBlinking": "phase", // Aesthetic blinking style
+  "breadcrumbs.enabled": true, // Navigation aid for large files
+
+  "editor.formatOnPaste": true, // Auto-format on paste
+  "typescript.format.enable": false, // Avoid conflict with Prettier
+  "typescript.preferences.importModuleSpecifier": "non-relative", // Avoid ./ imports
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  "javascript.suggest.autoImports": true,
+  "typescript.suggest.autoImports": true,
+  "typescript.suggest.completeFunctionCalls": true,
+  "javascript.suggest.completeFunctionCalls": true,
+  "editor.parameterHints.enabled": true,
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.suggestSelection": "first",
+
+  "debug.inlineValues": "on", // Show variable values inline while debugging
+  "debug.openDebug": "openOnSessionStart", // Opens debug panel automatically
+
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.rebaseWhenSync": true,
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
+  },
+
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.removeUnusedImports": "never",
+    "source.sortImports": "explicit",
+    "source.addMissingImports": "explicit",
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.prettier": "explicit",
+    "source.fixAll.ts": "explicit",
+    "source.removeUnused.ts": "explicit"
+  },
+  "cSpell.words": [
+    "albetrios",
+    "classlink",
+    "clinovia",
+    "configrution",
+    "databse",
+    "frameguard",
+    "FULLTEXT",
+    "hsts",
+    "IFNULL",
+    "ilike",
+    "INTERAKT",
+    "knex",
+    "knexfile",
+    "maxsize",
+    "Millis",
+    "nonwords",
+    "nosniff",
+    "organisations",
+    "SENDGRID",
+    "WINDOWMS"
+  ],
+  "git.ignoreLimitWarning": true,
+  "prettier.useEditorConfig": false
+}
