@@ -1,5 +1,4 @@
 const CustomerCollectionAccessModel = require("../../models/collections/customer-collection-access.model");
-const CollectionService = require("./collection.service");
 const UserModel = require("../../models/users/user.model");
 const knex = require("../../loaders/knex");
 
@@ -8,11 +7,19 @@ class CustomerCollectionAccessService {
     try {
       this.context = context;
       this.customerCollectionAccessModel = new CustomerCollectionAccessModel();
-      this.collectionService = new CollectionService(context);
       this.userModel = new UserModel();
+      this._collectionService = null; // Lazy loading
     } catch (error) {
       throw error;
     }
+  }
+
+  get collectionService() {
+    if (!this._collectionService) {
+      const CollectionService = require("./collection.service");
+      this._collectionService = new CollectionService(this.context);
+    }
+    return this._collectionService;
   }
 
   async grantAccess({

@@ -3,7 +3,6 @@ const CollectionSrNoService = require("./collection-sr-no.service");
 const StockMovementService = require("./stock-movement.service");
 const knex = require("../../loaders/knex");
 const UserService = require("../users/user.service");
-const CollectionAccessService = require("./customer-collection-access.service");
 
 class CollectionService {
   constructor(context) {
@@ -13,10 +12,18 @@ class CollectionService {
       this.collectionSrNoService = new CollectionSrNoService(context);
       this.stockMovementService = new StockMovementService(context);
       this.userService = new UserService(context);
-      this.collectionAccessService = new CollectionAccessService(context);
+      this._collectionAccessService = null; // Lazy loading
     } catch (error) {
       throw error;
     }
+  }
+
+  get collectionAccessService() {
+    if (!this._collectionAccessService) {
+      const CollectionAccessService = require("./customer-collection-access.service");
+      this._collectionAccessService = new CollectionAccessService(this.context);
+    }
+    return this._collectionAccessService;
   }
 
   async createCollection({ collectionData, trx: providedTrx }) {
