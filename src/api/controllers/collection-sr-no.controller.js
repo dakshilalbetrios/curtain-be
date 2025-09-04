@@ -1,5 +1,6 @@
 const CollectionSrNoService = require("../../services/collections/collection-sr-no.service");
 const knex = require("../../loaders/knex");
+const successMessages = require("../constants/success-messages.constant");
 
 class CollectionSrNoController {
   constructor() {}
@@ -106,8 +107,16 @@ class CollectionSrNoController {
 
       const { id } = req.params;
 
+      const collectionSrNoService = new CollectionSrNoService(req.context);
+
+      await collectionSrNoService.deleteSerialNumber({
+        srNoId: id,
+        trx,
+      });
+
       await trx.commit();
       return res.json({
+        data: { message: successMessages.SERIAL_NUMBER_DELETED_SUCCESS },
         message: "200::Serial number deleted successfully",
       });
     } catch (error) {

@@ -97,4 +97,7 @@ module.exports = {
   // Inside Inventory Transaction
   INSIDE_INVENTORY_TRANSACTION_DELETED_SUCCESS:
     "200::Inside inventory transaction deleted successfully",
+
+  // Serial number
+  SERIAL_NUMBER_DELETED_SUCCESS: "200::Serial number deleted successfully",
 };

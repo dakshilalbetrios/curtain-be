@@ -103,15 +103,12 @@ class CollectionSrNoService {
 
         // Create stock movement record
         await this.stockMovementService.createStockMovement({
-          data: {
-            collection_sr_no_id: srNoId,
-            action,
-            quantity,
-            message:
-              reason ||
-              `${action === "IN" ? "Stock added" : "Stock reduced"}: ${quantity} ${existingSrNo.unit || "units"} (Previous: ${existingSrNo.current_stock}, New: ${newStock})`,
-            created_by: this.context?.user?.id || null,
-          },
+          collectionSrNoId: srNoId,
+          action,
+          quantity,
+          message:
+            reason ||
+            `${action === "IN" ? "Stock added" : "Stock reduced"}: ${quantity} ${existingSrNo.unit || "units"} (Previous: ${existingSrNo.current_stock}, New: ${newStock})`,
           trx,
         });
 
