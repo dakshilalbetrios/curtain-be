@@ -54,6 +54,47 @@ class CollectionSrNoService {
     }
   }
 
+  async createBulkSerialNumbers({ collectionId, srNoData, trx: providedTrx }) {
+    let trx = providedTrx;
+    let isNewTrx = false;
+    try {
+      if (!trx) {
+        trx = await knex.transaction();
+        isNewTrx = true;
+      }
+
+      const createdSrNos = [];
+      const errors = [];
+
+      for (const srNo of srNoData) {
+        try {
+          console.log("srNoData", srNoData);
+          const createdSrNo = await this.createSerialNumber({
+            collectionId,
+            srNoData: srNo,
+            trx,
+          });
+          createdSrNos.push(createdSrNo);
+        } catch (error) {
+          errors.push(error.message);
+          continue;
+        }
+      }
+
+      console.log("createdSrNos", createdSrNos);
+      console.log("errors", errors);
+
+      if (isNewTrx) await trx.commit();
+      return {
+        createdSrNos,
+        errors,
+      };
+    } catch (error) {
+      if (isNewTrx && trx) await trx.rollback();
+      throw error;
+    }
+  }
+
   async updateSerialNumber({ srNoId, updateData, trx: providedTrx }) {
     let trx = providedTrx;
     let isNewTrx = false;
@@ -137,6 +178,46 @@ class CollectionSrNoService {
     }
   }
 
+  async updateBulkSerialNumbers({ srNoData, trx: providedTrx }) {
+    let trx = providedTrx;
+    let isNewTrx = false;
+    try {
+      if (!trx) {
+        trx = await knex.transaction();
+        isNewTrx = true;
+      }
+
+      const updatedSrNos = [];
+      const errors = [];
+
+      for (const srNo of srNoData) {
+        try {
+          const { _action, ...finalSrNoData } = srNo;
+
+          console.log("finalSrNoData", finalSrNoData);
+          const updatedSrNo = await this.updateSerialNumber({
+            srNoId: finalSrNoData.id,
+            updateData: finalSrNoData,
+            trx,
+          });
+          updatedSrNos.push(updatedSrNo);
+        } catch (error) {
+          errors.push(error.message);
+          continue;
+        }
+      }
+
+      if (isNewTrx) await trx.commit();
+      return {
+        updatedSrNos,
+        errors,
+      };
+    } catch (error) {
+      if (isNewTrx && trx) await trx.rollback();
+      throw error;
+    }
+  }
+
   async deleteSerialNumber({ srNoId, trx: providedTrx }) {
     let trx = providedTrx;
     let isNewTrx = false;
@@ -207,6 +288,38 @@ class CollectionSrNoService {
 
       if (isNewTrx) await trx.commit();
       return;
+    } catch (error) {
+      if (isNewTrx && trx) await trx.rollback();
+      throw error;
+    }
+  }
+
+  async deleteBulkSerialNumbers({ srNoIds, trx: providedTrx }) {
+    let trx = providedTrx;
+    let isNewTrx = false;
+    try {
+      if (!trx) {
+        trx = await knex.transaction();
+        isNewTrx = true;
+      }
+
+      const deletedSrNos = [];
+      const errors = [];
+      for (const srNoId of srNoIds) {
+        try {
+          const deletedSrNo = await this.deleteSerialNumber({ srNoId, trx });
+          deletedSrNos.push(deletedSrNo);
+        } catch (error) {
+          errors.push(error.message);
+          continue;
+        }
+      }
+
+      if (isNewTrx) await trx.commit();
+      return {
+        deletedSrNos,
+        errors,
+      };
     } catch (error) {
       if (isNewTrx && trx) await trx.rollback();
       throw error;

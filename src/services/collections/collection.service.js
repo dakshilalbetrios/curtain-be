@@ -287,38 +287,109 @@ class CollectionService {
 
   async updateCollection({ collectionId, updateData, trx: providedTrx }) {
     let trx = providedTrx;
-    let isNewTrx = false;
+    const isNewTrx = !providedTrx;
     try {
-      if (!trx) {
+      if (isNewTrx) {
         trx = await knex.transaction();
-        isNewTrx = true;
       }
 
-      // Check if collection exists
-      const existingCollection = await this.collectionModel.findById({
-        id: collectionId,
-        trx,
-      });
+      const {
+        serial_numbers: inputSerialNumbers,
+        ...collectionDataWithoutSerialNumbers
+      } = updateData;
 
-      if (!existingCollection) {
-        throw new Error("Collection not found");
-      }
+      const collectionWithAudit = {
+        ...collectionDataWithoutSerialNumbers,
+        updated_by: this.context?.user?.id || null,
+      };
 
-      // Update collection
       const updatedCollection =
         await this.collectionModel.updateWithoutUsername({
           id: collectionId,
-          data: {
-            ...updateData,
-            updated_by: this.context?.user?.id || null,
-          },
+          data: collectionWithAudit,
           trx,
         });
 
-      if (isNewTrx) await trx.commit();
-      return updatedCollection;
+      if (!updatedCollection) {
+        if (isNewTrx) {
+          await trx.rollback();
+        }
+        throw new Error("Collection not found");
+      }
+
+      if (inputSerialNumbers?.length) {
+        const serialNumbersToCreate = [];
+        const serialNumbersToUpdate = [];
+        const serialNumberIdsToDelete = [];
+
+        for (const serialNumber of inputSerialNumbers) {
+          if (serialNumber._action === "create") {
+            // New serial number to create
+            serialNumbersToCreate.push({
+              ...serialNumber,
+              collection_id: collectionId,
+              created_by: this.context?.user?.id || null,
+            });
+          } else if (serialNumber._action === "delete") {
+            // Serial number to delete
+            serialNumberIdsToDelete.push(serialNumber.id);
+          } else if (serialNumber._action === "update") {
+            // Serial number to update
+            serialNumbersToUpdate.push({
+              ...serialNumber,
+              id: serialNumber.id,
+              collection_id: collectionId,
+              updated_by: this.context?.user?.id || null,
+            });
+          }
+        }
+
+        // Create new serial numbers
+        if (serialNumbersToCreate.length) {
+          await this.collectionSrNoService.createBulkSerialNumbers({
+            collectionId,
+            srNoData: serialNumbersToCreate,
+            trx,
+          });
+        }
+
+        // Update existing serial numbers
+        if (serialNumbersToUpdate.length) {
+          await this.collectionSrNoService.updateBulkSerialNumbers({
+            srNoData: serialNumbersToUpdate,
+            trx,
+          });
+        }
+
+        // Delete serial numbers
+        if (serialNumberIdsToDelete.length) {
+          await this.collectionSrNoService.deleteBulkSerialNumbers({
+            srNoIds: serialNumberIdsToDelete,
+            trx,
+          });
+        }
+      }
+
+      // Get all serial numbers for the collection to ensure we have the complete data
+      const allSerialNumbers =
+        await this.collectionSrNoService.getSerialNumbersByCollection({
+          collectionId,
+          trx,
+        });
+
+      const result = {
+        ...updatedCollection,
+        serial_numbers: allSerialNumbers,
+      };
+
+      if (isNewTrx) {
+        await trx.commit();
+      }
+      return result;
     } catch (error) {
-      if (isNewTrx && trx) await trx.rollback();
+      if (isNewTrx && trx) {
+        await trx.rollback();
+      }
       throw error;
     }
   }

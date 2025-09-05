@@ -124,9 +124,11 @@ class CollectionController {
     let trx;
     try {
       trx = await knex.transaction();
-      const collectionService = new CollectionService(req.context);
+
       const { id } = req.params;
       const collectionData = req.body;
+
+      const collectionService = new CollectionService(req.context);
 
       const updatedCollection = await collectionService.updateCollection({
         collectionId: id,
@@ -140,6 +142,7 @@ class CollectionController {
         message: "200::Collection updated successfully",
       });
     } catch (error) {
+      console.error("Error in updateCollection controller:", error);
       if (trx) await trx.rollback();
       next(error);
     }

@@ -225,8 +225,6 @@ class BaseModel {
     try {
       const { page, limit, ...restParams } = params;
 
-      console.log("restParams", restParams);
-
       // Build the main query
       const qb = this._processParams(restParams, trx);
 
