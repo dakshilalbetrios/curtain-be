@@ -1,6 +1,8 @@
 const Joi = require("joi");
 
 const orderItemSchema = Joi.object({
+  courier_tracking_no: Joi.string().optional(),
+  courier_company: Joi.string().optional(),
   collection_sr_no_id: Joi.number().integer().positive().required().messages({
     "number.base": "Collection serial number ID must be a number",
     "number.integer": "Collection serial number ID must be an integer",
@@ -16,6 +18,8 @@ const orderItemSchema = Joi.object({
 });
 
 const updateOrderItemSchema = Joi.object({
+  courier_tracking_no: Joi.string().optional(),
+  courier_company: Joi.string().optional(),
   id: Joi.number()
     .integer()
     .positive()
@@ -66,6 +70,8 @@ const createOrderSchema = Joi.object({
     "array.min": "At least one order item is required",
     "any.required": "Order items are required",
   }),
+  courier_tracking_no: Joi.string().optional(),
+  courier_company: Joi.string().optional(),
 });
 
 const updateOrderSchema = Joi.object({
@@ -78,6 +84,8 @@ const updateOrderSchema = Joi.object({
       "array.min": "At least one order item operation is required",
       "any.required": "Order items are required",
     }),
+  courier_tracking_no: Joi.string().optional(),
+  courier_company: Joi.string().optional(),
 });
 
 const updateOrderStatusSchema = Joi.object({

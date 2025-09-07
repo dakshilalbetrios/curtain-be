@@ -13,8 +13,6 @@ class UserController {
       const userService = new UserService(req.context);
       const userData = req.body;
 
-      console.log("userData", userData);
-
       const createdUser = await userService.createUser({
         userData,
         trx,
@@ -211,6 +209,77 @@ class UserController {
       return res.json({
         data: { message: successMessages.USER_DELETED_SUCCESS },
         message: "200::User deleted successfully",
+      });
+    } catch (error) {
+      if (trx) await trx.rollback();
+      next(error);
+    }
+  }
+
+  async isUserExists(req, res, next) {
+    let trx;
+    try {
+      trx = await knex.transaction();
+      const userService = new UserService(req.context);
+      const { mobileNo } = req.query;
+
+      const result = await userService.isUserExists({
+        mobileNo,
+        trx,
+      });
+
+      await trx.commit();
+      return res.json({
+        data: result,
+        message: result ? "200::User exists" : "200::User does not exist",
+      });
+    } catch (error) {
+      if (trx) await trx.rollback();
+      next(error);
+    }
+  }
+
+  async setUserPassword(req, res, next) {
+    let trx;
+    try {
+      trx = await knex.transaction();
+      const userService = new UserService(req.context);
+      const { mobile_no, password } = req.body;
+
+      const result = await userService.setUserPassword({
+        mobileNo: mobile_no,
+        password,
+        trx,
+      });
+
+      await trx.commit();
+      return res.json({
+        data: result,
+        message: "200::User password set successfully",
+      });
+    } catch (error) {
+      if (trx) await trx.rollback();
+      next(error);
+    }
+  }
+
+  async changeUserPassword(req, res, next) {
+    let trx;
+    try {
+      trx = await knex.transaction();
+      const userService = new UserService(req.context);
+      const { oldPassword, newPassword } = req.body;
+
+      const result = await userService.changeUserPassword({
+        old_password: oldPassword,
+        new_password: newPassword,
+        trx,
+      });
+
+      await trx.commit();
+      return res.json({
+        data: result,
+        message: "200::User password changed successfully",
       });
     } catch (error) {
       if (trx) await trx.rollback();

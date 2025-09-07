@@ -68,7 +68,6 @@ class CollectionSrNoService {
 
       for (const srNo of srNoData) {
         try {
-          console.log("srNoData", srNoData);
           const createdSrNo = await this.createSerialNumber({
             collectionId,
             srNoData: srNo,
@@ -80,9 +79,6 @@ class CollectionSrNoService {
           continue;
         }
       }
-
-      console.log("createdSrNos", createdSrNos);
-      console.log("errors", errors);
 
       if (isNewTrx) await trx.commit();
       return {
@@ -194,7 +190,6 @@ class CollectionSrNoService {
         try {
           const { _action, ...finalSrNoData } = srNo;
 
-          console.log("finalSrNoData", finalSrNoData);
           const updatedSrNo = await this.updateSerialNumber({
             srNoId: finalSrNoData.id,
             updateData: finalSrNoData,
@@ -269,8 +264,6 @@ class CollectionSrNoService {
         collectionId,
         trx
       );
-
-      console.log("serialNumbers", serialNumbers);
 
       for (const serialNumber of serialNumbers) {
         await this.stockMovementService.deleteStockMovement({

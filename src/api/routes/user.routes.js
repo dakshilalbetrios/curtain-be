@@ -7,6 +7,18 @@ const userRoutes = [
   },
   {
     method: "POST",
+    path: "/users/set-password",
+    handler: "UserController.setUserPassword",
+    authenticate: false,
+  },
+  {
+    method: "POST",
+    path: "/users/change-password",
+    handler: "UserController.changeUserPassword",
+    authenticate: true,
+  },
+  {
+    method: "POST",
     path: "/users/bulk",
     handler: "UserController.createBulkUsers",
     authenticate: true,
@@ -16,6 +28,12 @@ const userRoutes = [
     path: "/users/export",
     handler: "UserController.exportUsers",
     authenticate: true,
+  },
+  {
+    method: "GET",
+    path: "/users/is-exists",
+    handler: "UserController.isUserExists",
+    authenticate: false,
   },
   {
     method: "GET",

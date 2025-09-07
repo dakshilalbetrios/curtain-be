@@ -254,8 +254,6 @@ class CollectionService {
         isNewTrx = true;
       }
 
-      console.log("collectionId", collectionId);
-
       const collection = await this.collectionModel.findById({
         id: collectionId,
         trx,

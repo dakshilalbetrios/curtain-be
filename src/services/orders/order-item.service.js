@@ -60,8 +60,6 @@ class OrderItemService {
         };
       });
 
-      console.log("orderItemsWithAudit", orderItemsWithAudit);
-
       const createdItems = await this.orderItemModel.createBulk({
         data: orderItemsWithAudit,
         trx,

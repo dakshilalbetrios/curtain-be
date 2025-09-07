@@ -62,8 +62,6 @@ class CollectionController {
         trx,
       });
 
-      console.log("result", result);
-
       await trx.commit();
 
       return res.json({

@@ -289,7 +289,13 @@ class OrderService {
     }
   }
 
-  async updateOrderStatus({ orderId, status, trx: providedTrx }) {
+  async updateOrderStatus({
+    orderId,
+    status,
+    courier_tracking_no,
+    courier_company,
+    trx: providedTrx,
+  }) {
     let trx = providedTrx;
     const isNewTrx = !providedTrx;
     try {
@@ -297,8 +303,14 @@ class OrderService {
         trx = await knex.transaction();
       }
 
+      console.log("status", status);
+      console.log("courier_tracking_no", courier_tracking_no);
+      console.log("courier_company", courier_company);
+
       const orderWithAudit = {
         status,
+        courier_tracking_no,
+        courier_company,
         updated_by: this.context.user.id,
       };
 

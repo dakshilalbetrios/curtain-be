@@ -24,8 +24,6 @@ class AuthService {
         trx,
       });
 
-      console.log("user", user);
-
       if (!user) {
         throw new Error(errorMessages.USER_NOT_FOUND);
       }
@@ -40,8 +38,6 @@ class AuthService {
       }
 
       const isMatch = await bcrypt.compare(password, user.hashed_password);
-
-      console.log("isMatch", isMatch);
 
       if (!isMatch) {
         throw new Error(errorMessages.INVALID_PASSWORD);

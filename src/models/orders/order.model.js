@@ -21,6 +21,8 @@ class OrderModel extends BaseModel {
 
     const tableColumns = [
       "id",
+      "courier_tracking_no",
+      "courier_company",
       "status",
       "created_by",
       "created_at",
@@ -72,6 +74,8 @@ class OrderModel extends BaseModel {
 
     return {
       id: order.id,
+      courier_tracking_no: order.courier_tracking_no,
+      courier_company: order.courier_company,
       status: order.status,
       created_by: order.created_by,
       created_at: order.created_at,

@@ -1,6 +1,4 @@
 const { OrderService } = require("../../services");
-const errorMessages = require("../constants/error-messages.constant");
-const successMessages = require("../constants/success-messages.constant");
 const knex = require("../../loaders/knex");
 
 class OrderController {
@@ -87,7 +85,10 @@ class OrderController {
     try {
       const orderService = new OrderService(req.context);
       const { id } = req.params;
-      const { status } = req.body;
+
+      console.log("id", id);
+      console.log("req.body", req.body);
+      const { status, courier_tracking_no, courier_company } = req.body;
 
       // Validate status
       const validStatuses = [
@@ -110,9 +111,14 @@ class OrderController {
         });
       }
 
+      console.log("courier_tracking_no", courier_tracking_no);
+      console.log("courier_company", courier_company);
+
       const updatedOrder = await orderService.updateOrderStatus({
         orderId: id,
         status,
+        courier_tracking_no,
+        courier_company,
         trx,
       });
 

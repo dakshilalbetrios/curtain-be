@@ -268,8 +268,6 @@ class CustomerCollectionAccessService {
         throw new Error("Customer collection access not found");
       }
 
-      console.log("existingAccess", existingAccess);
-
       for (const access of existingAccess.data) {
         await this.customerCollectionAccessModel.delete({
           id: access.id,

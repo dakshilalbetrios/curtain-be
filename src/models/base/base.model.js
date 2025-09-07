@@ -206,9 +206,7 @@ class BaseModel {
       // Transform field mappings first
       const transformedRecord = this._transformFieldMappings(record);
 
-      return this.transformResult
-        ? this.transformResult(transformedRecord)
-        : transformedRecord;
+      return transformedRecord;
     }
 
     return record;

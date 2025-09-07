@@ -29,12 +29,14 @@ class UserService {
 
       if (isExistedUser) throw new Error(errorMessages.ALREADY_EXISTED_USER);
 
-      // Hash the password before saving
-      const plainPassword = userData.password;
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(plainPassword, salt);
-      userData.hashed_password = hashedPassword;
-      delete userData.password;
+      if (userData.password) {
+        // Hash the password before saving
+        const plainPassword = userData.password;
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(plainPassword, salt);
+        userData.hashed_password = hashedPassword;
+        delete userData.password;
+      }
 
       // Create user in single database
       const createdUser = await this.userModel.createWithoutUsername({
@@ -81,13 +83,16 @@ class UserService {
           }
 
           // Hash password
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(userData.password, salt);
+          if (userData.password) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(userData.password, salt);
+            userData.hashed_password = hashedPassword;
+            delete userData.password;
+          }
 
           // Prepare user data
           const userToCreate = {
             ...userData,
-            hashed_password: hashedPassword,
             created_by: this.context?.user?.id || null,
           };
 
@@ -293,6 +298,92 @@ class UserService {
       // Delete user from database
       const result = await this.userModel.delete({
         id: userId,
+        trx,
+      });
+
+      if (isNewTrx) await trx.commit();
+      return result;
+    } catch (error) {
+      if (isNewTrx && trx) await trx.rollback();
+      throw error;
+    }
+  }
+
+  async isUserExists({ mobileNo, trx: providedTrx }) {
+    let trx = providedTrx;
+    let isNewTrx = false;
+    try {
+      if (!trx) {
+        trx = await knex.transaction();
+        isNewTrx = true;
+      }
+
+      const result = await this.userModel.findByMobile(mobileNo, trx);
+
+      if (isNewTrx) await trx.commit();
+      return result;
+    } catch (error) {
+      if (isNewTrx && trx) await trx.rollback();
+      throw error;
+    }
+  }
+
+  async setUserPassword({ mobileNo, password, trx: providedTrx }) {
+    let trx = providedTrx;
+    let isNewTrx = false;
+    try {
+      if (!trx) {
+        trx = await knex.transaction();
+        isNewTrx = true;
+      }
+
+      const isExistedUser = await this.userModel.findByMobile(mobileNo, trx);
+
+      if (!isExistedUser) throw new Error(errorMessages.USER_NOT_FOUND);
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const result = await this.userModel.updateWithoutUsername({
+        id: isExistedUser.id,
+        data: { hashed_password: hashedPassword },
+        trx,
+      });
+
+      if (isNewTrx) await trx.commit();
+      return result;
+    } catch (error) {
+      if (isNewTrx && trx) await trx.rollback();
+      throw error;
+    }
+  }
+
+  async changeUserPassword({ old_password, new_password, trx: providedTrx }) {
+    let trx = providedTrx;
+    let isNewTrx = false;
+    try {
+      if (!trx) {
+        trx = await knex.transaction();
+        isNewTrx = true;
+      }
+      const { id } = this.context.user;
+      const isExistedUser = await this.getOneUser({ where: { id: id }, trx });
+
+      if (!isExistedUser) throw new Error(errorMessages.USER_NOT_FOUND);
+
+      const isMatch = await bcrypt.compare(
+        old_password,
+        isExistedUser.hashed_password
+      );
+
+      if (!isMatch) throw new Error(errorMessages.INVALID_PASSWORD);
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(new_password, salt);
+
+      const result = await this.userModel.updateWithoutUsername({
+        id: isExistedUser.id,
+        data: { hashed_password: hashedPassword },
         trx,
       });
 
