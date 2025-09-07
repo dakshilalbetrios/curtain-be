@@ -80,14 +80,16 @@ class CollectionController {
       trx = await knex.transaction();
       const collectionService = new CollectionService(req.context);
 
-      const resultData = await collectionService.getAllCollections({
-        params: req.query,
-        trx,
-      });
+      const { resultData, pagination } =
+        await collectionService.getAllCollections({
+          params: req.query,
+          trx,
+        });
 
       await trx.commit();
       return res.json({
         data: resultData,
+        pagination,
       });
     } catch (error) {
       if (trx) await trx.rollback();

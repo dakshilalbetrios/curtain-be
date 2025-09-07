@@ -216,7 +216,10 @@ class CollectionService {
       }
 
       if (isNewTrx) await trx.commit();
-      return resultData.data;
+      return {
+        resultData: resultData.data,
+        pagination: resultData.pagination,
+      };
     } catch (error) {
       if (isNewTrx && trx) await trx.rollback();
       throw error;
