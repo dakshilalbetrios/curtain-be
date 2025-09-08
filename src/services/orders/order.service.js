@@ -304,10 +304,6 @@ class OrderService {
         trx = await knex.transaction();
       }
 
-      console.log("status", status);
-      console.log("courier_tracking_no", courier_tracking_no);
-      console.log("courier_company", courier_company);
-
       const orderWithAudit = {
         status,
         courier_tracking_no,
@@ -424,7 +420,6 @@ class OrderService {
   async getAllOrders({ params = {}, trx: providedTrx }) {
     let trx = providedTrx;
     try {
-      console.log("params", params);
       // If user is customer, only show their orders
       if (this.context.user.role === "CUSTOMER") {
         params.created_by_eq = this.context.user.id;
@@ -436,11 +431,8 @@ class OrderService {
         const overdueDate = new Date();
         overdueDate.setDate(overdueDate.getDate() - config.ORDER_DELIVERED_DAY);
 
-        console.log("overdueDate", overdueDate);
         params.created_at_lt = overdueDate;
       }
-
-      console.log("params", params);
 
       const orders = await this.orderModel.findAll({
         params,
