@@ -114,4 +114,7 @@ module.exports = {
   // Interakt Configuration
   INTERAKT_API_KEY: process.env.INTERAKT_API_KEY,
   INTERAKT_API_URL: process.env.INTERAKT_API_URL,
+
+  // Order Configuration
+  ORDER_DELIVERED_DAY: parseInt(process.env.ORDER_DELIVERED_DAY) || 4,
 };

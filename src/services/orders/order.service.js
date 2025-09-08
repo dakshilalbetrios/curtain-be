@@ -3,6 +3,7 @@ const OrderItemService = require("./order-item.service");
 const CollectionSrNoService = require("../collections/collection-sr-no.service");
 const StockMovementService = require("../collections/stock-movement.service");
 const knex = require("../../loaders/knex");
+const config = require("../../configs");
 
 class OrderService {
   constructor(context) {
@@ -423,10 +424,23 @@ class OrderService {
   async getAllOrders({ params = {}, trx: providedTrx }) {
     let trx = providedTrx;
     try {
+      console.log("params", params);
       // If user is customer, only show their orders
       if (this.context.user.role === "CUSTOMER") {
         params.created_by_eq = this.context.user.id;
       }
+
+      if (params.status_in === "OVER_DUE") {
+        params.status_in = ["PENDING", "APPROVED", "SHIPPED"];
+        // Calculate the date that is ORDER_DELIVERED_DAY days ago
+        const overdueDate = new Date();
+        overdueDate.setDate(overdueDate.getDate() - config.ORDER_DELIVERED_DAY);
+
+        console.log("overdueDate", overdueDate);
+        params.created_at_lt = overdueDate;
+      }
+
+      console.log("params", params);
 
       const orders = await this.orderModel.findAll({
         params,
