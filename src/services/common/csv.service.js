@@ -24,11 +24,26 @@ class CsvService {
       const fields = Object.keys(firstObject);
       const headers = this.generateHeaders(fields, type);
 
+      // Add index column at the beginning
+      const indexHeader = "Index";
+      const indexField = "index";
+      const finalHeaders = [indexHeader, ...headers];
+      const finalFields = [indexField, ...fields];
+
       // Process data based on type and query params
       const processedData = this.processDataByType(type, data, queryParams);
 
+      // Add index to each row
+      const indexedData = processedData.map((item, index) => ({
+        [indexField]: index + 1,
+        ...item,
+      }));
+
       // Generate CSV content
-      const csvContent = this.convertToCsv(processedData, { headers, fields });
+      const csvContent = this.convertToCsv(indexedData, {
+        headers: finalHeaders,
+        fields: finalFields,
+      });
 
       return csvContent;
     } catch (error) {

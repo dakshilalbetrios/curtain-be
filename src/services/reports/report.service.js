@@ -238,10 +238,9 @@ class ReportService {
       "Customer Name": item.customer_name,
       "Customer Mobile": item.customer_mobile,
       "Collection Name": item.collection_name,
-      "Collection Description": item.collection_description,
       "Total Orders": item.total_orders,
       "Total Quantity Ordered": item.total_quantity_ordered,
-      "Unique Serial Numbers Ordered": item.unique_serial_numbers_ordered,
+      // "Unique Serial Numbers Ordered": item.unique_serial_numbers_ordered,
     }));
 
     return this.csvService.generateCsv({
@@ -273,16 +272,14 @@ class ReportService {
     const csvData = result.data.map((item) => ({
       "Serial Number": item.serial_number,
       "Collection Name": item.collection_name,
-      "Collection Description": item.collection_description,
-      Unit: item.unit,
       "Total Orders": item.total_orders,
       "Total Quantity Ordered": item.total_quantity_ordered,
-      "Unique Customers": item.unique_customers,
-      "Average Quantity per Order": parseFloat(
-        item.avg_quantity_per_order || 0
-      ).toFixed(2),
-      "Max Quantity Ordered": item.max_quantity_ordered,
-      "Min Quantity Ordered": item.min_quantity_ordered,
+      // "Unique Customers": item.unique_customers,
+      // "Average Quantity per Order": parseFloat(
+      //   item.avg_quantity_per_order || 0
+      // ).toFixed(2),
+      // "Max Quantity Ordered": item.max_quantity_ordered,
+      // "Min Quantity Ordered": item.min_quantity_ordered,
     }));
 
     return this.csvService.generateCsv({
@@ -306,14 +303,14 @@ class ReportService {
       "Customer Name": item.customer_name,
       "Customer Mobile": item.customer_mobile,
       "Total Orders": item.total_orders,
-      "Unique Products Ordered": item.unique_products_ordered,
+      // "Unique Products Ordered": item.unique_products_ordered,
       "Total Quantity Ordered": item.total_quantity_ordered,
-      "Unique Collections Ordered": item.unique_collections_ordered,
-      "Average Quantity per Item": parseFloat(
-        item.avg_quantity_per_item || 0
-      ).toFixed(2),
-      "First Order Date": item.first_order_date,
-      "Last Order Date": item.last_order_date,
+      // "Unique Collections Ordered": item.unique_collections_ordered,
+      // "Average Quantity per Item": parseFloat(
+      //   item.avg_quantity_per_item || 0
+      // ).toFixed(2),
+      // "First Order Date": item.first_order_date,
+      // "Last Order Date": item.last_order_date,
     }));
 
     return this.csvService.generateCsv({
@@ -338,15 +335,14 @@ class ReportService {
 
     const csvData = result.data.map((item) => ({
       "Collection Name": item.collection_name,
-      "Collection Description": item.collection_description,
       "Total Serial Numbers": item.total_serial_numbers,
       "Total Orders": item.total_orders,
       "Unique Customers": item.unique_customers,
       "Total Quantity Ordered": item.total_quantity_ordered,
-      "Active Serial Numbers": item.active_serial_numbers,
-      "Average Quantity per Order": parseFloat(
-        item.avg_quantity_per_order || 0
-      ).toFixed(2),
+      // "Active Serial Numbers": item.active_serial_numbers,
+      // "Average Quantity per Order": parseFloat(
+      //   item.avg_quantity_per_order || 0
+      // ).toFixed(2),
     }));
 
     return this.csvService.generateCsv({

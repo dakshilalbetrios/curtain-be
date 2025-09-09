@@ -30,12 +30,11 @@ class ReportModel extends BaseModel {
         "u.mobile_no as customer_mobile",
         "c.id as collection_id",
         "c.name as collection_name",
-        "c.description as collection_description",
         knex.raw("COUNT(DISTINCT o.id) as total_orders"),
         knex.raw("SUM(oi.quantity) as total_quantity_ordered"),
-        knex.raw(
-          "COUNT(DISTINCT oi.collection_sr_no_id) as unique_serial_numbers_ordered"
-        ),
+        // knex.raw(
+        //   "COUNT(DISTINCT oi.collection_sr_no_id) as unique_serial_numbers_ordered"
+        // ),
       ])
       .from("users as u")
       .innerJoin(
@@ -98,14 +97,12 @@ class ReportModel extends BaseModel {
         "csn.sr_no as serial_number",
         "c.id as collection_id",
         "c.name as collection_name",
-        "c.description as collection_description",
-        "csn.unit",
         knex.raw("COUNT(DISTINCT o.id) as total_orders"),
         knex.raw("SUM(oi.quantity) as total_quantity_ordered"),
-        knex.raw("COUNT(DISTINCT o.created_by) as unique_customers"),
-        knex.raw("AVG(oi.quantity) as avg_quantity_per_order"),
-        knex.raw("MAX(oi.quantity) as max_quantity_ordered"),
-        knex.raw("MIN(oi.quantity) as min_quantity_ordered"),
+        // knex.raw("COUNT(DISTINCT o.created_by) as unique_customers"),
+        // knex.raw("AVG(oi.quantity) as avg_quantity_per_order"),
+        // knex.raw("MAX(oi.quantity) as max_quantity_ordered"),
+        // knex.raw("MIN(oi.quantity) as min_quantity_ordered"),
       ])
       .from("collections_serial_numbers as csn")
       .innerJoin("collections as c", "csn.collection_id", "c.id")
@@ -152,14 +149,14 @@ class ReportModel extends BaseModel {
         "u.name as customer_name",
         "u.mobile_no as customer_mobile",
         knex.raw("COUNT(DISTINCT o.id) as total_orders"),
-        knex.raw(
-          "COUNT(DISTINCT oi.collection_sr_no_id) as unique_products_ordered"
-        ),
+        // knex.raw(
+        //   "COUNT(DISTINCT oi.collection_sr_no_id) as unique_products_ordered"
+        // ),
         knex.raw("SUM(oi.quantity) as total_quantity_ordered"),
-        knex.raw("COUNT(DISTINCT c.id) as unique_collections_ordered"),
-        knex.raw("AVG(oi.quantity) as avg_quantity_per_item"),
-        knex.raw("MAX(o.created_at) as last_order_date"),
-        knex.raw("MIN(o.created_at) as first_order_date"),
+        // knex.raw("COUNT(DISTINCT c.id) as unique_collections_ordered"),
+        // knex.raw("AVG(oi.quantity) as avg_quantity_per_item"),
+        // knex.raw("MAX(o.created_at) as last_order_date"),
+        // knex.raw("MIN(o.created_at) as first_order_date"),
       ])
       .from("users as u")
       .innerJoin("orders as o", "u.id", "o.created_by")
@@ -200,15 +197,15 @@ class ReportModel extends BaseModel {
       .select([
         "c.id as collection_id",
         "c.name as collection_name",
-        "c.description as collection_description",
+        // "c.description as collection_description",
         knex.raw("COUNT(DISTINCT csn.id) as total_serial_numbers"),
         knex.raw("COUNT(DISTINCT o.id) as total_orders"),
         knex.raw("COUNT(DISTINCT o.created_by) as unique_customers"),
         knex.raw("SUM(oi.quantity) as total_quantity_ordered"),
-        knex.raw(
-          "COUNT(DISTINCT oi.collection_sr_no_id) as active_serial_numbers"
-        ),
-        knex.raw("AVG(oi.quantity) as avg_quantity_per_order"),
+        // knex.raw(
+        //   "COUNT(DISTINCT oi.collection_sr_no_id) as active_serial_numbers"
+        // ),
+        // knex.raw("AVG(oi.quantity) as avg_quantity_per_order"),
       ])
       .from("collections as c")
       .leftJoin(
