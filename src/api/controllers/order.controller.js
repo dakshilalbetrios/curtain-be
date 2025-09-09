@@ -131,13 +131,6 @@ class OrderController {
       const orderService = new OrderService(req.context);
       const { id } = req.params;
 
-      // Only ADMIN and SALES can delete orders
-      if (!["ADMIN", "SALES"].includes(req.context.user.role)) {
-        return res.status(403).json({
-          error: "Only ADMIN and SALES users can delete orders",
-        });
-      }
-
       await orderService.deleteOrder({
         orderId: id,
         trx,
