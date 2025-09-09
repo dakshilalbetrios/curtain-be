@@ -6,3 +6,4 @@ exports.StockMovementService = require("./collections/stock-movement.service");
 exports.CustomerCollectionAccessService = require("./collections/customer-collection-access.service");
 exports.OrderService = require("./orders/order.service");
 exports.OrderItemService = require("./orders/order-item.service");
+exports.ReportService = require("./reports/report.service");

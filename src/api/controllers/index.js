@@ -4,3 +4,4 @@ exports.CollectionController = require("./collection.controller");
 exports.CollectionSrNoController = require("./collection-sr-no.controller");
 exports.CustomerCollectionAccessController = require("./customer-collection-access.controller");
 exports.OrderController = require("./order.controller");
+exports.ReportController = require("./report.controller");

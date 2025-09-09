@@ -5,3 +5,4 @@ exports.StockMovementModel = require("./collections/stock-movement.model");
 exports.CustomerCollectionAccessModel = require("./collections/customer-collection-access.model");
 exports.OrderModel = require("./orders/order.model");
 exports.OrderItemModel = require("./orders/order-item.model");
+exports.ReportModel = require("./reports/report.model");

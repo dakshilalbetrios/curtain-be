@@ -9,6 +9,7 @@ const collectionRoutes = require("./collection.routes");
 const collectionSrNoRoutes = require("./collection-sr-no.routes");
 const customerCollectionAccessRoutes = require("./customer-collection-access.routes");
 const orderRoutes = require("./order.routes");
+const reportRoutes = require("./report.routes");
 
 const routes = [
   ...authRoutes,
@@ -17,6 +18,7 @@ const routes = [
   ...collectionSrNoRoutes,
   ...customerCollectionAccessRoutes,
   ...orderRoutes,
+  ...reportRoutes,
 ];
 
 // Middleware to initialize controllers with organization_slug

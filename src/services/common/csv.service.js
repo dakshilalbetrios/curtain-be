@@ -78,6 +78,12 @@ class CsvService {
       case "chat-messages":
         return this.processChatMessagesData(data, queryParams);
 
+      case "customer-collection-orders":
+      case "most-ordered-serial-numbers":
+      case "customer-order-summary":
+      case "collection-performance-analytics":
+        return this.processGenericData(data, queryParams);
+
       default:
         return this.processGenericData(data, queryParams);
     }
@@ -144,10 +150,10 @@ class CsvService {
   /**
    * Process chat-messages data for CSV export
    * @param {Array} data - Raw chat-messages data
-   * @param {Object} queryParams - Query parameters
+   * @param {Object} _queryParams - Query parameters
    * @returns {Array} Processed data
    */
-  processChatMessagesData(data, queryParams) {
+  processChatMessagesData(data, _queryParams) {
     return data.map((message) => {
       const processedMessage = {};
 
