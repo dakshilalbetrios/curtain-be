@@ -237,16 +237,16 @@ class OrderService {
 
         // Update existing items
         if (orderItemsToUpdate.length) {
-          await this.orderItemService.updateOrderItemsBulk({
-            orderItemsData: orderItemsToUpdate,
-            orderId,
-            trx,
-          });
-
           // Handle stock adjustments for updated items
           await this._handleOrderStockAdjustment({
             orderId,
             items: orderItemsToUpdate,
+            trx,
+          });
+
+          await this.orderItemService.updateOrderItemsBulk({
+            orderItemsData: orderItemsToUpdate,
+            orderId,
             trx,
           });
         }
@@ -494,7 +494,7 @@ class OrderService {
 
       if (!currentItem) continue;
 
-      const quantityDifference = item.quantity - currentItem.quantity;
+      const quantityDifference = +item.quantity - +currentItem.quantity;
 
       if (quantityDifference !== 0) {
         // Update collection serial number stock

@@ -40,8 +40,6 @@ class ReportService {
         endDate,
       });
 
-      console.log("data", data);
-
       if (isNewTrx) await trx.commit();
       return {
         data,
@@ -235,8 +233,6 @@ class ReportService {
       startDate,
       endDate,
     });
-
-    console.log("result", result);
 
     const csvData = result.data.map((item) => ({
       "Customer Name": item.customer_name,

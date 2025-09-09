@@ -18,9 +18,6 @@ class ReportController {
       const startDate = start_date ? new Date(start_date) : null;
       const endDate = end_date ? new Date(end_date) : null;
 
-      console.log("startDate", startDate);
-      console.log("endDate", endDate);
-
       const result = await reportService.getCustomerCollectionOrderAnalytics({
         startDate,
         endDate,

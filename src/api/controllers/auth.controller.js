@@ -27,10 +27,6 @@ class AuthController {
       const { user } = await authService.login({ mobile_no, password });
       const token = authService.generateToken(user);
 
-      // Debug logging
-      console.log("Token generated:", !!token);
-      console.log("User:", user ? user.id : "no user");
-
       // Set HTTP-only cookie with enhanced security
       const cookieOptions = {
         httpOnly: configs.SECURITY.COOKIE.HTTP_ONLY,
@@ -45,15 +41,9 @@ class AuthController {
         signed: true,
       };
 
-      console.log("Cookie options:", cookieOptions);
-
       // Set the JWT token in HTTP-only cookie
       if (token) {
         res.cookie("token", token, cookieOptions);
-        console.log("Cookie set successfully");
-
-        // Debug: Check if cookie was actually set
-        console.log("Response headers after setting cookie:", res.getHeaders());
       } else {
         console.error("Token is undefined, cannot set cookie");
       }
